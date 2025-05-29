@@ -1,18 +1,20 @@
-const Posts = () => {
+
+
+const Posts = ({title, image_url, short_description, author, creation_date}) => {
     return (
         <>
-            <a href="/" className="w-[40%] font-santoshi h-[12rem] border-b-1">
+            <a href="/" className="md:max-w-[38rem] font-santoshi md:h-[12rem] h-[10rem] border-b-1 w-[80%] group pb-15">
                 <div>
-                    <p className="text-[#6d6d6d]">Marques Brownlee, 15th January</p>
+                    <p className="text-[#6d6d6d]">{author} {creation_date}</p>
                 </div>
-                <div className="flex pt-4 gap-5">
+                <div className="flex pt-4 gap-10">
                     <div className="flex flex-col w-[70%]">
-                        <h2 className="font-santoshi-bold text-3xl">
-                            Why becoming a youtuber is hard nowadays
+                        <h2 className="font-santoshi-bold md:text-3xl text-xl group-hover:underline">
+                            {title}
                         </h2>
-                        <p className=" truncate pt-4 text-[#4f4f4f]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione, modi. Magni assumenda officiis consequatur minima error vitae facilis, aut numquam, sit facere asperiores. Alias hic eaque quo quam eius voluptatibus.</p>
+                        <p className=" truncate pt-4 text-[#4f4f4f]">{short_description}</p>
                     </div>
-                    <div className="bg-amber-600 w-full">
+                    <div className="bg-[#eee] w-full h-[5rem] md:h-auto mt-2 md:mt-0 flex justify-center items-center">
                         img
                     </div>
                 </div>

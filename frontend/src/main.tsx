@@ -7,6 +7,7 @@ import SignUp from "./Pages/SignUp";
 import Admin from "./Pages/Admin";
 import Post from "./Pages/Post";
 import Login from "./Pages/Login";
+import Write from "./Pages/Write";
 const root = document.getElementById("root");
 
 ReactDOM.createRoot(root).render(
@@ -17,6 +18,7 @@ ReactDOM.createRoot(root).render(
       <Route path="/admin" element={<Admin />} />
       <Route path="/:id" element={<Post/>} />
       <Route path="/login" element={<Login/>} />
+      <Route path="/write" element={<Write/>} />
     </Routes>
   </BrowserRouter>
 );
