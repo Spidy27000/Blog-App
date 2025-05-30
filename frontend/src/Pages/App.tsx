@@ -7,13 +7,7 @@ import SignUp from "./SignUp";
 import Write from "./Write";
 import { useEffect, useState } from 'react';
 import NotFound from './NotFound';
-
-
-interface userData {
-  username: string,
-  email: string,
-  password: string
-}
+import Edit from './Edit';
 
 function App() {
 
@@ -56,13 +50,17 @@ function App() {
           <ProtectedRoute>
             <Post />
           </ProtectedRoute>} />
-          <Route path='*' element={<NotFound/>} />
+        <Route path='*' element={<NotFound />} />
         <Route path="/login" element={<Login setUserData={setUserData} />} />
         <Route path="/write" element={
           <ProtectedRoute>
             <Write />
           </ProtectedRoute>} />
-
+        <Route path="/edit/:id" element={
+          <ProtectedRoute>
+            <Edit />
+          </ProtectedRoute>
+        } />
       </Routes>
     </Router>
   )

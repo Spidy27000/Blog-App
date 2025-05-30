@@ -44,7 +44,10 @@ export function SignForm({
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(signUpData)
-    localStorage.setItem("userData", JSON.stringify(signUpData))
+    localStorage.setItem("userData", JSON.stringify({
+      email: signUpData.email,
+      username: signUpData.username
+    }))
     setUserData(signUpData)
     navigator('/')
     console.log("This s localStorageData", JSON.parse(localStorage.getItem("userData")))

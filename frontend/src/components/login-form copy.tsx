@@ -40,7 +40,10 @@ export function LoginForm({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    localStorage.setItem('userData', JSON.stringify(loginData))
+    localStorage.setItem('userData', JSON.stringify({
+      email: loginData.email,
+      username: 'anurag'
+    }))
     setUserData(loginData)
     navigator('/')
     console.log(loginData)
