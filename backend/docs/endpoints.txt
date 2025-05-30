@@ -1,0 +1,52 @@
+/login (get)
+  args
+    email : string
+    password : string
+
+/signup (post)
+  args
+    username : string
+    email :string 
+    image_uri : stirng
+    password : string
+
+/blog/:blogid (get)
+  args
+    blogid : string
+  return
+    title: string
+    short description: string
+    image_uri : stirng
+    content: markdown
+    author : string
+    creation date :datetime 
+    update date: datetime 
+
+/blogs/ (get)
+  return []
+    title : string
+    image_uri : stirng
+    short description : string
+    content : markdown
+    author : string
+    creation date :datetime 
+    update date: datetime 
+
+/blog/create (post)
+  args
+    title : string
+    content :  markdown
+    image_uri : stirng
+    author : string
+  note short desciption to be generated from the content
+
+/blog/update (post)
+  args
+    blogid :objectid
+    title : string
+    content :markdown
+  note short desciption to be generated from the content
+
+/blog/delete/:blogid (get)
+  args
+    blogid :objectid
