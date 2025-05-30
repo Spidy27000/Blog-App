@@ -321,7 +321,7 @@ export function SimpleEditor() {
       </div>
     </EditorContext.Provider>
     <AlertDialog>
-  <AlertDialogTrigger><Button2 className="cursor-pointer active:scale-90 duration-300 ease">Upload</Button2></AlertDialogTrigger>
+  <AlertDialogTrigger className="cursor-pointer active:scale-90 duration-300 ease bg-black p-2 rounded-md text-white font-santoshi-medium pr-4 pl-4 hover:bg-[#272727]">Upload</AlertDialogTrigger>
   <AlertDialogContent>
     <AlertDialogHeader>
       <AlertDialogTitle>Are you absolutely sure you want to upload?</AlertDialogTitle>

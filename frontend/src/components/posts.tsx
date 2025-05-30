@@ -3,8 +3,8 @@
 const Posts = ({title, image_url, short_description, author, creation_date}) => {
     return (
         <>
-            <a href="/" className="md:max-w-[38rem] font-santoshi md:h-[12rem] h-[10rem] border-b-1 w-[80%] group pb-15">
-                <div>
+            <a href="/" className="md:max-w-[38rem] font-santoshi md:h-[14rem] h-[10rem] border-b-1 w-[80%] group pb-5 flex flex-col justify-center">
+                <div className=" text-[0.95rem]">
                     <p className="text-[#6d6d6d]">{author} {creation_date}</p>
                 </div>
                 <div className="flex pt-4 gap-10">
@@ -14,7 +14,7 @@ const Posts = ({title, image_url, short_description, author, creation_date}) => 
                         </h2>
                         <p className=" truncate pt-4 text-[#4f4f4f]">{short_description}</p>
                     </div>
-                    <div className="bg-[#eee] w-full h-[5rem] md:h-auto mt-2 md:mt-0 flex justify-center items-center">
+                    <div className="bg-[#eee] w-full h-[5rem] md:h-[7rem] mt-2 md:mt-0 flex justify-center items-center">
                         img
                     </div>
                 </div>
