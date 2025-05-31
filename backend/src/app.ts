@@ -4,6 +4,7 @@ import { UserModel, BlogModel } from './database';
 import { connect } from 'mongoose';
 import cors from "cors";
 import "dotenv/config";
+import { load } from 'cheerio';
 
 
 const app = express();
@@ -14,7 +15,17 @@ app.use(cors({ origin: process.env.VITE_ORIGIN }));
 app.use(bodyParser.json());
 
 function generateShortDescription(htmlContent: string) {
+  const maxLenght = 200;
+  let $ = load("<div class='a'><div>");
+  $(".a").append(htmlContent);
+  let text = $(".a").text().trim();
 
+  if (text.length <=150) return text;
+
+  text = text.slice(0,150);
+  let lastspace = text.lastIndexOf(" ");
+  return text.slice(0,lastspace) + "...";
+  
 }
 
 type LoginQuery = {
@@ -106,16 +117,6 @@ app.get(
     res.json({ blogs });
   }
 );
-
-
-// /blog/create (post)
-//   args
-//     title : string
-//     content :  markdown
-//     image_uri : stirng
-//     userId : string
-//   note short desciption to be generated from the content
-//
 
 app.post(
   "/blog/create",
