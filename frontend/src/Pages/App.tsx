@@ -30,7 +30,7 @@ function App() {
     if (!userData) {
       return <Navigate to="/login" replace />;
     }
-    return children;
+    return  children;
   };
 
   return (

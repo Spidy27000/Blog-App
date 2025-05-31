@@ -46,13 +46,13 @@ const UserBlogs = ({ title, image_url, short_description, author, creation_date,
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction>Continue</AlertDialogAction>
+                                <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
+                                <AlertDialogAction className="cursor-pointer">Continue</AlertDialogAction>
                             </AlertDialogFooter>
                         </AlertDialogContent>
                     </AlertDialog></PopoverContent>
                 </Popover></div>
-                <a href="/" className="">
+                <a href={`/post/${id}`} className="">
                     <div className=" text-[0.95rem]">
                         <p className="text-[#6d6d6d]">{author} {creation_date}</p>
                     </div>
