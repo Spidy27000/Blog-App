@@ -11,6 +11,9 @@ const Dashboard = () => {
 
   const [dashboardData, setDashboardData] = useState({});
   const itemsRef = useRef([])
+  const username = JSON.parse(localStorage.getItem('userData')).username
+  console.log(username)
+  const upperCaseUsernName = username.charAt(0).toUpperCase() + username.slice(1);
   interface homepageData {
     id: string,
     title: string,
@@ -174,7 +177,7 @@ const Dashboard = () => {
 
       {/* all users posts */}
       <div className="w-full mt-8 flex justify-center items-center flex-col gap-5">
-        <h1 className="md:text-left text-center md:max-w-[38rem] w-full font-crimson heading select-none md:text-7xl text-6xl -z-20 pb-5" ref={headingRef}>Hello, Anurag</h1>
+        <h1 className="md:text-left text-center md:max-w-[38rem] w-full font-crimson heading select-none md:text-7xl text-6xl -z-20 pb-10 md:pb-5" ref={headingRef}>Hello, {upperCaseUsernName}</h1>
 
         {/* skeleton card */}
         {loading && (<>

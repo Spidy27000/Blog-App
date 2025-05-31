@@ -26,10 +26,10 @@ const Edit = () => {
 
     let { id } = useParams();
 
-    
+
 
     //TODO: Verify on load that the blog id belongs to the locally stored userId
-    console.log("This is edit page")
+
     const content = `<p>This is the new way i am doing the <strong>work </strong>it is not <em>that </em><s>much</s> and</p><p style="text-align: center"><mark data-color="#f06060" style="background-color: #f06060; color: inherit">i dont think</mark></p><pre><code>is that so???</code></pre><p></p>`
 
     const jsonContent = generateJSON(content, [Document,

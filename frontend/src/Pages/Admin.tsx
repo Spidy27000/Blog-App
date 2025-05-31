@@ -15,6 +15,9 @@ interface personalData {
 }
 const Admin = () => {
 
+    // getting username (This is for testing in prod, we will take the userId from the localStorage and make requested based on it)
+    const user: any = localStorage.getItem('userData')
+    console.log(JSON.parse(user).username)
     //Load user created posts
     const { data, loading, error } = useUserPosts("https://jsonplaceholder.typicode.com/todos")
     console.log(data)
@@ -46,7 +49,7 @@ const Admin = () => {
             <Toaster />
             <NavBar />
             <div className="w-full mt-8 flex justify-center items-center flex-col gap-10">
-                <h1 className="md:text-left text-center md:max-w-[38rem] w-full text-7xl font-crimson">Your Blogs</h1>
+                <h1 className="md:text-left text-center md:max-w-[38rem] w-full md:text-7xl text-6xl font-crimson">Your Blogs</h1>
                 {loading && (<>
                     <div className="md:w-[38rem] w-[20rem] h-[5rem] flex justify-center items-center gap-5 mt-20">
                         <div className="w-full h-full flex flex-col gap-5 justify-center">
