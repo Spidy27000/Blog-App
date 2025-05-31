@@ -4,10 +4,11 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
 import { useNavigate } from "react-router"
+import useLogin from "../DataHooks/useLogin"
+import { toast, Toaster } from "sonner"
 
 
 interface loginData {
-  username: string,
   password: string,
   email: string
 }
@@ -25,7 +26,6 @@ export function LoginForm({
   let navigator = useNavigate()
 
   const [loginData, setLoginData] = useState<loginData>({
-    username: 'anurag',
     password: "",
     email: ""
   })
@@ -38,20 +38,43 @@ export function LoginForm({
     setLoginData((prev) => ({ ...prev, password: e.target.value }))
   }
 
-  const handleSubmit = (e) => {
+  const { loading, fetchUserData } = useLogin(`http://localhost:5000/login/?email=${loginData.email}&password=${loginData.password}`);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    localStorage.setItem('userData', JSON.stringify({
-      email: loginData.email,
-      username: 'anurag'
-    }))
-    setUserData(loginData)
-    navigator('/')
-    console.log(loginData)
+
+    if (loginData.email == '' || loginData.password == '') {
+      toast.error("Please fill all the required data");
+      return;
+    }
+    //validating from the server
+    try {
+      const response = await fetchUserData();
+      if (response.error) {
+        toast.error(response.error)
+        return;
+      }
+      //stroing user details to localstorage
+      localStorage.setItem('userData', JSON.stringify({
+        userId: response.user._id,
+        email: loginData.email,
+        username: response.user.username
+      }))
+      setUserData(loginData)
+      navigator('/')
+      console.log(loginData)
+    }
+    catch (err) {
+      toast.error("Something went wrong" + err)
+      console.log(err)
+    }
+
+
   }
 
 
   return (
-    <div className={cn("flex flex-col gap-6 w-full", className)} {...props}>
+    <><Toaster richColors position="top-center" /><div className={cn("flex flex-col gap-6 w-full", className)} {...props}>
       <form>
         <div className="flex flex-col gap-10 w-full">
           <div className="flex flex-col items-center gap-2">
@@ -62,7 +85,7 @@ export function LoginForm({
 
 
             </a>
-            <h1 className="text-6xl font-bold font-crimson w-full"> Welcome Back</h1>
+            <h1 className="md:text-6xl text-5xl font-bold font-crimson w-full"> Welcome Back</h1>
 
           </div>
           <div className="flex flex-col gap-6 font-santoshi-medium">
@@ -74,8 +97,7 @@ export function LoginForm({
                 placeholder="m@example.com"
                 required
                 className="h-10 text-md"
-                onChange={handleEmailChange}
-              />
+                onChange={handleEmailChange} />
             </div>
             <div className="grid gap-3">
               <Label htmlFor="password" className="text-lg">Password</Label>
@@ -85,8 +107,7 @@ export function LoginForm({
                 placeholder="password"
                 required
                 className="h-10 text-md"
-                onChange={handlePasswordChange}
-              />
+                onChange={handlePasswordChange} />
             </div>
             <Button type="submit" className="w-full text-md cursor-pointer" onClick={handleSubmit}>
               Login
@@ -101,6 +122,6 @@ export function LoginForm({
           Sign Up
         </a>
       </div>
-    </div>
+    </div></>
   )
 }

@@ -15,7 +15,7 @@ const SignUp = ({setUserData}) => {
     return(
         <>
         <div className="w-full h-screen flex justify-center items-center ">
-        <div className="w-[25%] justify-center items-center flex  p-5 border-1 rounded-lg">
+        <div className="md:w-[25%] w-[80%] justify-center items-center flex  p-5 border-1 rounded-lg">
             <SignForm setUserData={setUserData}/>
             </div>
             </div>

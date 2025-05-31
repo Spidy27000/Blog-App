@@ -4,6 +4,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
+import useSignUp from "@/DataHooks/useSignUp"
+import { toast, Toaster } from "sonner"
 
 interface signUpData {
   username: string,
@@ -11,9 +13,9 @@ interface signUpData {
   password: string
 }
 
-interface SignFormProps extends React.ComponentProps<'div'>{
+interface SignFormProps extends React.ComponentProps<'div'> {
   setUserData: any;
-} 
+}
 
 export function SignForm({
   className,
@@ -41,20 +43,43 @@ export function SignForm({
     setsignUpData((prev) => ({ ...prev, username: e.target.value }))
   }
 
-  const handleSubmit = (e) => {
+  const signUpUser  = useSignUp(signUpData, 'http://localhost:5000/signup/')
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(signUpData)
-    localStorage.setItem("userData", JSON.stringify({
-      email: signUpData.email,
-      username: signUpData.username
-    }))
-    setUserData(signUpData)
-    navigator('/')
-    console.log("This s localStorageData", JSON.parse(localStorage.getItem("userData")))
+
+    //validating for missing fields
+    if (signUpData.email == '' || signUpData.password == '' || signUpData.username == '') {
+      toast.error("Please enter all the credentials");
+      return;
+    }
+    try {
+
+      //Signing up the user
+      const response = await signUpUser();
+
+      //if any err, toast it
+      if (response.error) {
+        toast.error(response.error)
+        return;
+      }
+      //stroing user details to localstorage
+      localStorage.setItem('userData', JSON.stringify({
+        userId: response.user._id,
+        email: signUpData.email,
+        username: signUpData.username
+      }))
+      setUserData(signUpData)
+      navigator('/')
+    }
+    catch (err) {
+      toast.error("Something went wrong" + err)
+      console.log(err)
+    }
   }
 
   return (
-    <div className={cn("flex flex-col gap-6 w-full", className)} {...props}>
+    <><Toaster richColors position="top-center" /><div className={cn("flex flex-col gap-6 w-full", className)} {...props}>
       <form>
         <div className="flex flex-col gap-10 w-full">
           <div className="flex flex-col items-center gap-2">
@@ -77,8 +102,7 @@ export function SignForm({
                 placeholder="Username"
                 required
                 className="h-10 text-md"
-                onChange={handleUsernameChange}
-              />
+                onChange={handleUsernameChange} />
             </div>
             <div className="grid gap-3">
               <Label htmlFor="email" className="text-lg">Email</Label>
@@ -88,8 +112,7 @@ export function SignForm({
                 placeholder="m@example.com"
                 required
                 className="h-10 text-md"
-                onChange={handleEmailChange}
-              />
+                onChange={handleEmailChange} />
             </div>
             <div className="grid gap-3">
               <Label htmlFor="password" className="text-lg">Password</Label>
@@ -99,8 +122,7 @@ export function SignForm({
                 placeholder="password"
                 required
                 className="h-10 text-md"
-                onChange={handlePasswordChange}
-              />
+                onChange={handlePasswordChange} />
             </div>
             <Button type="submit" className="w-full text-md cursor-pointer" onClick={handleSubmit}>
               Sign Up
@@ -115,6 +137,6 @@ export function SignForm({
           login
         </a>
       </div>
-    </div>
+    </div></>
   )
 }
