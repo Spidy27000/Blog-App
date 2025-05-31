@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+import { model, ObjectId, Schema } from "mongoose";
 
 export type User = Document & {
   username: string,
@@ -24,17 +24,17 @@ export type Blog = Document & {
   content: string,
   creationDate: Date,
   updateDate: Date,
-  author: string
+  userId: ObjectId
 }
 
 const BlogSchema = new Schema<Blog>({
   title: { type: String, required: true },
   shortDescription: { type: String, required: true },
   image_uri: { type: String, required: true },
-  author: { type: String, required: true },
+  userId: { type: Schema.Types.ObjectId, required: true , ref: "User" },
   content: { type: String, required: true },
-  creationDate: { type: Date, required: true },
-  updateDate: { type: Date, required: true },
+  creationDate: { type: Date, required: true, default: Date.now},
+  updateDate: { type: Date, required: true, default: Date.now},
 
 });
 

@@ -22,6 +22,17 @@
     creation date :datetime 
     update date: datetime 
 
+/blogs/:userId (get)
+  return []
+    title : string
+    image_uri : stirng
+    short description : string
+    content : markdown
+    author : string
+    creation date :datetime 
+    update date: datetime 
+  
+
 /blogs/ (get)
   return []
     title : string
