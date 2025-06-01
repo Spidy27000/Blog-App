@@ -16,16 +16,16 @@ app.use(bodyParser.json());
 
 function generateShortDescription(htmlContent: string) {
   const maxLenght = 200;
-  let $ = load("<div class='a'><div>");
-  $(".a").append(htmlContent);
-  let text = $(".a").text().trim();
+  let $ = load("<div class='a'><div>")(".a");
+  $.append(htmlContent);
+  let text = $.text().trim();
 
-  if (text.length <=maxLenght) return text;
+  if (text.length <= maxLenght) return text;
 
-  text = text.slice(0,maxLenght);
+  text = text.slice(0, maxLenght);
   let lastspace = text.lastIndexOf(" ");
-  return text.slice(0,lastspace) + "...";
-  
+  return text.slice(0, lastspace) + "...";
+
 }
 
 type LoginQuery = {
@@ -93,12 +93,12 @@ app.get(
   async (req: Request<{ blogId: string }>, res: Response): Promise<any> => {
     const { blogId } = req.params;
     const blog = await BlogModel.findById(blogId);
-    
+
     if (!blog) {
       return res.status(404).json({ error: "Blog Not Found" });
     }
-    const user = await UserModel.findById(blog?.userId)
-    res.json({ blog , user });
+    const user = await UserModel.findById(blog.userId);
+    res.json({ blog, user });
   }
 );
 
@@ -106,6 +106,7 @@ app.get(
 app.get(
   '/blogs/:userId',
   async (req: Request<{ userId: string }>, res: Response): Promise<any> => {
+    // TODO : also give user info with the each data
     const { userId } = req.params;
     const blogs = await BlogModel.find({ userId: userId });
     if (!blogs) {
@@ -119,6 +120,7 @@ app.get(
 app.get(
   '/blogs/',
   async (_req: Request, res: Response): Promise<any> => {
+    // TODO : also give user info with the each data
     const blogs = await BlogModel.find();
     if (!blogs) {
       return res.status(404).json({ error: "Blog Not Found" });
@@ -129,38 +131,46 @@ app.get(
 
 app.post(
   "/blog/create",
-  async (req: Request<{}, {}, BlogCreateBody>, res: Response):Promise<any> =>{
+  async (req: Request<{}, {}, BlogCreateBody>, res: Response): Promise<any> => {
     const { title, content, image_uri, userId } = req.body;
     const shortDescription = generateShortDescription(content);
     const blog = new BlogModel({ title, content, image_uri, userId, shortDescription });
     await blog.save();
-    res.json({message: "blog saved"});
+    res.json({ message: "blog saved", blog });
   }
 )
 
 app.post(
   "/blog/update",
-  async (req: Request<{},{},BlogUpdateBody>, res: Response): Promise<any> =>{
+  async (req: Request<{}, {}, BlogUpdateBody>, res: Response): Promise<any> => {
 
-    const { blogId ,title, content, image_uri } = req.body;
+    const { blogId, title, content, image_uri } = req.body;
     const blog = await BlogModel.findById(blogId);
 
     if (!blog) {
       return res.status(404).json({ error: "Blog Not Found" });
     }
 
-    blog.updateDate = new Date();
+    blog.updateDate = Date.now();
     if (title) blog.title = title;
     if (content) {
       blog.content = content;
       blog.shortDescription = generateShortDescription(content);
     }
-    if (image_uri) blog.image_uri=image_uri;
+    if (image_uri) blog.image_uri = image_uri;
 
-    res.json
+    res.json({ message: "updated Successfull", blog })
   }
 )
-
+app.get(
+  "/blog/delete/:blogId",
+  async (req: Request<{ blogId: string }>, res: Response) : Promise<any> => {
+    const { blogId } = req.params;
+    const deleted = await BlogModel.findByIdAndDelete(blogId);
+    if (!deleted) return res.status(404).json({ error: 'Blog not found' });
+    res.json({ message: 'Blog deleted', blog: deleted });
+  }
+)
 
 app.listen(PORT, async () => {
   try {

@@ -22,8 +22,8 @@ export type Blog = Document & {
   shortDescription: string,
   image_uri: string,
   content: string,
-  creationDate: Date,
-  updateDate: Date,
+  creationDate: number,
+  updateDate: number,
   userId: ObjectId
 }
 
@@ -33,8 +33,8 @@ const BlogSchema = new Schema<Blog>({
   image_uri: { type: String, required: true },
   userId: { type: Schema.Types.ObjectId, required: true , ref: "User" },
   content: { type: String, required: true },
-  creationDate: { type: Date, required: true, default: Date.now},
-  updateDate: { type: Date, required: true, default: Date.now},
+  creationDate: { type: Number, required: true, default: Date.now},
+  updateDate: { type: Number, required: true, default: Date.now},
 
 });
 
