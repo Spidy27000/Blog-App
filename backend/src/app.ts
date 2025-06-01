@@ -43,7 +43,14 @@ type SignUpBody = {
 type BlogCreateBody = {
   title: string,
   content: string,
-  image_uri: string,
+  image_uri?: string,
+  userId: string
+}
+type BlogUpdateBody = {
+  blogId: string,
+  title?: string,
+  content?: string,
+  image_uri?: string,
   userId: string
 }
 
@@ -86,10 +93,12 @@ app.get(
   async (req: Request<{ blogId: string }>, res: Response): Promise<any> => {
     const { blogId } = req.params;
     const blog = await BlogModel.findById(blogId);
+    
     if (!blog) {
       return res.status(404).json({ error: "Blog Not Found" });
     }
-    res.json({ blog });
+    const user = await UserModel.findById(blog?.userId)
+    res.json({ blog , user });
   }
 );
 
@@ -98,11 +107,11 @@ app.get(
   '/blogs/:userId',
   async (req: Request<{ userId: string }>, res: Response): Promise<any> => {
     const { userId } = req.params;
-    const blog = await BlogModel.find({ userId: userId });
-    if (!blog) {
+    const blogs = await BlogModel.find({ userId: userId });
+    if (!blogs) {
       return res.status(404).json({ error: "Blog Not Found" });
     }
-    res.json({ blog });
+    res.json({ blogs });
   }
 );
 
@@ -120,12 +129,35 @@ app.get(
 
 app.post(
   "/blog/create",
-  async (req: Request<{}, {}, BlogCreateBody>, res: Response) =>{
+  async (req: Request<{}, {}, BlogCreateBody>, res: Response):Promise<any> =>{
     const { title, content, image_uri, userId } = req.body;
     const shortDescription = generateShortDescription(content);
     const blog = new BlogModel({ title, content, image_uri, userId, shortDescription });
     await blog.save();
     res.json({message: "blog saved"});
+  }
+)
+
+app.post(
+  "/blog/update",
+  async (req: Request<{},{},BlogUpdateBody>, res: Response): Promise<any> =>{
+
+    const { blogId ,title, content, image_uri } = req.body;
+    const blog = await BlogModel.findById(blogId);
+
+    if (!blog) {
+      return res.status(404).json({ error: "Blog Not Found" });
+    }
+
+    blog.updateDate = new Date();
+    if (title) blog.title = title;
+    if (content) {
+      blog.content = content;
+      blog.shortDescription = generateShortDescription(content);
+    }
+    if (image_uri) blog.image_uri=image_uri;
+
+    res.json
   }
 )
 
