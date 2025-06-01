@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 const useDashboardData = (url: string) => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState([{}]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 

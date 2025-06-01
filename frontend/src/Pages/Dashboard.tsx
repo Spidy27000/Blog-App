@@ -12,7 +12,6 @@ const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState({});
   const itemsRef = useRef([])
   const username = JSON.parse(localStorage.getItem('userData')).username
-  console.log(username)
   const upperCaseUsernName = username.charAt(0).toUpperCase() + username.slice(1);
   interface homepageData {
     id: string,
@@ -24,16 +23,15 @@ const Dashboard = () => {
   }
 
   //loading actual data from the server
-  const { data, loading, error } = useDashboardData("https://jsonplaceholder.typicode.com/todos")
-  console.log(data)
+  const { data, loading, error } = useDashboardData("http://localhost:5000/blogs/")
+  console.log(data.blogs)
+
   //handling error with sonner
   useEffect(() => {
     if (error) {
       toast.error(error)
     }
   }, [error])
-
-
 
   //checking the skeleton component
   // useEffect(() => {

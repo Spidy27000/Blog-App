@@ -10,7 +10,7 @@ import { load } from 'cheerio';
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({ origin: process.env.VITE_ORIGIN }));
+app.use(cors({ origin: true, credentials: true }));
 
 app.use(bodyParser.json());
 
@@ -117,6 +117,7 @@ app.get(
 );
 
 // /blogs
+//TODO: remove content from the response
 app.get(
   '/blogs/',
   async (_req: Request, res: Response): Promise<any> => {
