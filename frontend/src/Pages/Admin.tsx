@@ -2,48 +2,36 @@ import NavBar from "@/components/navbar"
 import { Skeleton } from "@/components/ui/skeleton"
 import UserBlogs from "@/components/userBlog"
 import useUserPosts from "@/DataHooks/useUserPosts"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { toast, Toaster } from "sonner"
 
 
-interface personalData {
-    id: string,
-    title: string,
-    image_url: string,
-    short_description: string,
-    creation_date: string
-}
 const Admin = () => {
 
-    // getting username (This is for testing in prod, we will take the userId from the localStorage and make requested based on it)
     const user: any = localStorage.getItem('userData')
     console.log(JSON.parse(user).username)
+    const stroredUserId = JSON.parse(user).userId
+
+
+    console.log(stroredUserId)
+    const url = `http://localhost:5000/blogs/${stroredUserId}`
+    console.log(url)
+
     //Load user created posts
-    const { data, loading, error } = useUserPosts("https://jsonplaceholder.typicode.com/todos")
+    const { data, loading, error } = useUserPosts(`http://localhost:5000/blogs/${stroredUserId}`)
     console.log(data)
 
+
+    const convertToDate = (timestamp) => {
+        const date = new Date(timestamp);
+        return date.toLocaleDateString();
+    }
     useEffect(() => {
         if (error) {
             toast.error(error)
         }
     }, [error])
 
-    //dummy data
-    const personalData: personalData[] = [{
-        id: 'abcd',
-        title: 'Why youtube is harder nowadays',
-        image_url: '/img',
-        short_description: `Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur ea culpa aliquam, neque a veritatis, delectus recusandae adipisci`,
-        creation_date: `January 12th 2024`
-    },
-    {
-        id: 'abc',
-        title: 'Why it is super good to be a youtube nowadaysa kansdansldnasd',
-        image_url: '/img',
-        short_description: `Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur ea culpa aliquam, neque a veritatis, delectus recusandae adipisci`,
-        creation_date: `January 12th 2024`
-
-    },]
     return (
         <>
             <Toaster />
@@ -84,9 +72,11 @@ const Admin = () => {
 
                 </>
                 )}
-                {!loading && (personalData.map(data =>
-                    <UserBlogs key={data.id} id={data.id} title={data.title} image_url={data.image_url} short_description={data.short_description} creation_date={data.creation_date} />
+                {!loading && data && (data.map(data =>
+                    <UserBlogs key={data.blogId} id={data.blogId} title={data.title} image_url={data.image_uri} short_description={data.shortDescription} creation_date={convertToDate(data.creationDate)} />
                 ))}
+
+                {!loading && (data.length == 0) && (<div><p className="text-[#747474] font-santoshi-medium pt-10">You have created no blogs</p></div>)}
             </div>
         </>
     )

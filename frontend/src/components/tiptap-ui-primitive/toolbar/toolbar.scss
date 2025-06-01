@@ -14,6 +14,7 @@
   display: flex;
   align-items: center;
   gap: 0.25rem;
+  background-color: white;
 
   &-group {
     display: flex;
@@ -32,11 +33,11 @@
 
   &[data-variant="fixed"] {
     position: sticky;
-    top: 0;
-    z-index: 10;
+    top: 25px;
+    z-index: 60;
     width: 100%;
     min-height: var(--tt-toolbar-height);
-    background: var(--tt-toolbar-bg-color);
+    background-color: white;
     border-bottom: 1px solid var(--tt-toolbar-border-color);
     padding: 0 0.5rem;
     overflow-x: auto;

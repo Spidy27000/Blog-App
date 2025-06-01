@@ -14,7 +14,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 
-
+import { useNavigate } from "react-router"
 // --- Tiptap Core Extensions ---
 import { StarterKit } from "@tiptap/starter-kit"
 import { Image } from "@tiptap/extension-image"
@@ -92,6 +92,9 @@ import { handleImageUpload, MAX_FILE_SIZE } from "@/lib/tiptap-utils"
 import "@/components/tiptap-templates/simple/simple-editor.scss"
 
 import content from "@/components/tiptap-templates/simple/data/content.json"
+import { useState } from "react"
+import useCreateBlog from "@/DataHooks/useCreateBlog"
+import CreateBlog from "@/DataHooks/useCreateBlog"
 
 const MainToolbarContent = ({
   onHighlighterClick,
@@ -198,14 +201,21 @@ const MobileToolbarContent = ({
   </>
 )
 
-export function SimpleEditor({edit_content}) {
+export function SimpleEditor({edit_content, title}) {
   const isMobile = useMobile()
   const windowSize = useWindowSize()
+  let navigator = useNavigate();
+  const createBlogData = {
+    title: title,
+    userId: JSON.parse(localStorage.getItem('userData')).userId,
+    content: '',
+    image_uri: "none"
+  }
   const [mobileView, setMobileView] = React.useState<
     "main" | "highlighter" | "link"
   >("main")
   const toolbarRef = React.useRef<HTMLDivElement>(null)
-
+  const createBlog = useCreateBlog(createBlogData, "http://localhost:5000/blog/create")
   const editor = useEditor({
     immediatelyRender: false,
     editorProps: {
@@ -247,36 +257,19 @@ export function SimpleEditor({edit_content}) {
 
 
 
-  const handleUpload = () => {
-    const json = editor.getJSON()
-    console.log(json)
-    const html = generateHTML(json, [
-      Document,
-      Paragraph,
-      Text,
-      StarterKit,
-      TextAlign.configure({ types: ["heading", "paragraph"] }),
-      Underline,
-      TaskList,
-      TaskItem.configure({ nested: true }),
-      Highlight.configure({ multicolor: true }),
-      Image,
-      Typography,
-      Superscript,
-      Subscript,
-
-      Selection,
-      ImageUploadNode.configure({
-        accept: "image/*",
-        maxSize: MAX_FILE_SIZE,
-        limit: 3,
-        upload: handleImageUpload,
-        onError: (error) => console.error("Upload failed:", error),
-      }),
-      TrailingNode,
-      Link.configure({ openOnClick: false }),
-    ])
-    console.log(html)
+  const handleUpload = async () => {
+    const html = editor?.getHTML()
+    createBlogData.content = html
+    try{
+      const response = await createBlog();
+      console.log(response)
+      navigator("/")
+    }
+    catch(err)
+    {
+      console.log(err)
+    }
+    
   }
 
   const bodyRect = useCursorVisibility({

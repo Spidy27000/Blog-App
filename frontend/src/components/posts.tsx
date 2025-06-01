@@ -1,5 +1,3 @@
-
-
 const Posts = ({title, image_url, short_description, author, creation_date, id}) => {
     return (
         <>

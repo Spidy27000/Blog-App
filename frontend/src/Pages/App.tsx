@@ -18,8 +18,7 @@ function App() {
 
   // Checking if the local storage already has the user data
   useEffect(() => {
-    const storedUserData = localStorage.getItem('userData');
-    console.log(storedUserData)
+    const storedUserData = localStorage.getItem('userData');  
     if (storedUserData) {
       setUserData(JSON.parse(storedUserData))
     }

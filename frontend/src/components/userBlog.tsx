@@ -21,6 +21,8 @@ import {
 } from "@/components/ui/alert-dialog"
 
 import { useNavigate } from "react-router";
+import DeleteBlog from "@/DataHooks/DeleteBlog";
+import { Toaster } from "sonner";
 
 
 const UserBlogs = ({ title, image_url, short_description, author, creation_date, id }) => {
@@ -31,8 +33,17 @@ const UserBlogs = ({ title, image_url, short_description, author, creation_date,
         navigator(`/edit/${id}`)
     }
 
+    const handleDelete = async () => {
+
+        //Deleting blog
+        const res = await DeleteBlog(`http://localhost:5000/blog/delete/${id}`)
+        console.log(res)
+        window.location.reload()
+    }
+
     return (
         <>
+            <Toaster />
             <div className="md:max-w-[38rem] font-santoshi md:h-[15rem] h-[10rem] border-b-1 w-[80%] group pb-5 flex flex-col justify-center relative">
                 <div className="flex justify-end group-hover:opacity-100 opacity-0 transition-all duration-300 ease"><Popover>
                     <PopoverTrigger className="bg-[#f9f9f9] p-1 rounded-sm border-1 cursor-pointer"> <Ellipsis /></PopoverTrigger>
@@ -47,7 +58,7 @@ const UserBlogs = ({ title, image_url, short_description, author, creation_date,
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                                 <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
-                                <AlertDialogAction className="cursor-pointer">Continue</AlertDialogAction>
+                                <AlertDialogAction className="cursor-pointer" onClick={handleDelete}>Continue</AlertDialogAction>
                             </AlertDialogFooter>
                         </AlertDialogContent>
                     </AlertDialog></PopoverContent>

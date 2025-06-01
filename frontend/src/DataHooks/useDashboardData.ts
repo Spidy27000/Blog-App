@@ -1,7 +1,16 @@
 import { useState, useEffect } from "react";
 
+interface response{
+  blogId: string,
+  title: string,
+  author: string,
+  shortDescription: string,
+  image_uri: string,
+  creationDate: number
+}
+
 const useDashboardData = (url: string) => {
-  const [data, setData] = useState([{}]);
+  const [responseData, setResponseData] = useState<response[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -11,7 +20,8 @@ const useDashboardData = (url: string) => {
       try {
         const response = await fetch(url);
         const json = await response.json();
-        setData(json);
+        setResponseData(json.blogs);
+        console.log(json)
       } catch (error: any) {
         setError(error);
       } finally {
@@ -22,7 +32,7 @@ const useDashboardData = (url: string) => {
     fetchData();
   }, []);
 
-  return { data, loading, error };
+  return { responseData, loading, error };
 };
 
 export default useDashboardData;
