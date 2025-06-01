@@ -53,11 +53,14 @@ type BlogUpdateBody = {
   image_uri?: string,
   userId: string
 }
-
-//TODO: Remove if not needed
-// const toObjectId = (id:string) : Types.ObjectId =>{
-//   return new Types.ObjectId(id);
-// }
+type BlogResponse = {
+  title: string,
+  blogId: string,
+  author: string,
+  shortDescription: string,
+  creationDate: number,
+  image_uri: string
+};
 
 app.get(
   '/login',
@@ -102,31 +105,61 @@ app.get(
   }
 );
 
+
 // /blogs/:userId (get)
 app.get(
   '/blogs/:userId',
   async (req: Request<{ userId: string }>, res: Response): Promise<any> => {
-    // TODO : also give user info with the each data
     const { userId } = req.params;
     const blogs = await BlogModel.find({ userId: userId });
+    const user = await UserModel.findById(userId);
+
     if (!blogs) {
       return res.status(404).json({ error: "Blog Not Found" });
     }
-    res.json({ blogs });
+    if (!user) {
+      return res.status(404).json({ error: "User Not Found" });
+    }
+    let resBlogs: BlogResponse[] = blogs.map(({ _id ,title, shortDescription, creationDate, image_uri }) => {
+      return <BlogResponse>{
+        blogId: _id.toString(),
+        title,
+        author: user.username,
+        shortDescription,
+        creationDate,
+        image_uri
+      };
+    });
+
+    res.json({ blogs: resBlogs });
   }
 );
 
 // /blogs
-//TODO: remove content from the response
 app.get(
   '/blogs/',
   async (_req: Request, res: Response): Promise<any> => {
-    // TODO : also give user info with the each data
     const blogs = await BlogModel.find();
     if (!blogs) {
       return res.status(404).json({ error: "Blog Not Found" });
     }
-    res.json({ blogs });
+    let resBlogs: BlogResponse[] = (await Promise.all(
+      blogs.map(async ({ _id, title, shortDescription, userId, creationDate, image_uri }): Promise<BlogResponse | null> => {
+        const user = await UserModel.findById(userId).select({ username: 1 });
+        if (!user) return null;
+
+        return <BlogResponse>{
+          blogId: _id.toString(),
+          title,
+          author: user.username,
+          shortDescription,
+          creationDate,
+          image_uri
+        };
+      })
+    )).filter((blog) => blog != null);
+
+    res.json({ blogs: resBlogs });
   }
 );
 
@@ -137,7 +170,7 @@ app.post(
     const shortDescription = generateShortDescription(content);
     const blog = new BlogModel({ title, content, image_uri, userId, shortDescription });
     await blog.save();
-    res.json({ message: "blog saved", blog });
+    res.json({ message: "blog saved"});
   }
 )
 
@@ -160,16 +193,16 @@ app.post(
     }
     if (image_uri) blog.image_uri = image_uri;
 
-    res.json({ message: "updated Successfull", blog })
+    res.json({ message: "updated Successfull"})
   }
 )
 app.get(
   "/blog/delete/:blogId",
-  async (req: Request<{ blogId: string }>, res: Response) : Promise<any> => {
+  async (req: Request<{ blogId: string }>, res: Response): Promise<any> => {
     const { blogId } = req.params;
     const deleted = await BlogModel.findByIdAndDelete(blogId);
     if (!deleted) return res.status(404).json({ error: 'Blog not found' });
-    res.json({ message: 'Blog deleted', blog: deleted });
+    res.json({ message: 'Blog deleted'});
   }
 )
 
