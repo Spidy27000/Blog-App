@@ -317,7 +317,7 @@ export function SimpleEditor({ edit_content, title, id }) {
         )}
       </Toolbar>
 
-      <div className="content-wrapper w-full font-crimson  h-full">
+      <div className="content-wrapper w-full font-source-serif  h-full">
         <EditorContent
           editor={editor}
           role="presentation"

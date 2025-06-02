@@ -42,7 +42,6 @@ export function LoginForm({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (loginData.email == '' || loginData.password == '') {
       toast.error("Please fill all the required data");
       return;
@@ -50,7 +49,6 @@ export function LoginForm({
     //validating from the server
     try {
       const response = await fetchUserData();
-      console.log(response.user.username)
       if (response.error) {
         toast.error(response.error)
         return;

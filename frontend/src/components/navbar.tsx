@@ -29,7 +29,7 @@ const NavBar = () => {
 
     return (
         <>
-            <nav className="p-6 pr-8 pl-8 flex justify-between  items-center sticky top-0 bg-white z-50">
+            <nav className="p-6 pr-8 pl-8 flex justify-between  items-center sticky top-0 bg-white z-20">
                 <div>
                     <a href="/"  className=" font-crimson font-bold text-3xl">BlogSpace</a>
                 </div>

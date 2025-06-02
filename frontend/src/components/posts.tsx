@@ -13,9 +13,7 @@ const Posts = ({ title, image_url, short_description, author, creation_date, id 
                         <p className=" truncate pt-4 text-[#4f4f4f] select-none">{short_description}</p>
                     </div>
                     <div className="max-w-[30%] h-[5rem] md:h-[6rem] mt-2 md:mt-0 flex justify-center select-none items-center ">
-                        <img src={image_url} alt="no image" className="object-cover w-[100%] h-[70%] md:h-[100%]" onError={(e) => {
-                            e.target.style.display = 'none';
-                        }} />
+                        <img src={image_url}  className={`object-cover ${image_url ? `w-[100%]` : `w-0`} h-[70%] md:h-[100%]`} />
                     </div>
                 </div>
             </a>

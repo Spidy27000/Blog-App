@@ -44,8 +44,8 @@ const UserBlogs = ({ title, image_url, short_description, author, creation_date,
     return (
         <>
             <Toaster />
-            <div className="md:max-w-[38rem] font-santoshi md:h-[15rem] h-[10rem] border-b-1 w-[80%] group pb-5 flex flex-col justify-center relative">
-                <div className="flex justify-end group-hover:opacity-100 opacity-0 transition-all duration-300 ease"><Popover>
+            <div>
+                <div className="flex justify-end group-hover:opacity-100 opacity-0 transition-all duration-300 ease absolute right-0 top-0"><Popover>
                     <PopoverTrigger className="bg-[#f9f9f9] p-1 rounded-sm border-1 cursor-pointer"> <Ellipsis /></PopoverTrigger>
                     <PopoverContent className="w-auto p-2 flex flex-col gap-2 font-santoshi-medium"><Button onClick={editPageRedirect} className="flex justify-between items-center gap-8 w-full bg-[#f8f8f8] text-black border-1 hover:bg-[#eee] cursor-pointer">Edit <Pencil /></Button><AlertDialog>
                         <AlertDialogTrigger ><Button className="flex justify-between items-center gap-5 w-full bg-[#f8f8f8] text-black border-1 hover:bg-[#eee] hover:text-red-600 cursor-pointer">Delete <Trash /></Button></AlertDialogTrigger>
@@ -68,16 +68,14 @@ const UserBlogs = ({ title, image_url, short_description, author, creation_date,
                         <p className="text-[#6d6d6d]">{author} {creation_date}</p>
                     </div>
                     <div className="flex pt-4 gap-10">
-                        <div className="flex flex-col w-[70%]">
+                        <div className="flex flex-col w-[70%] justify-center">
                             <h2 className="font-santoshi-bold md:text-3xl text-xl group-hover:underline">
                                 {title}
                             </h2>
                             <p className=" truncate pt-4 text-[#4f4f4f]">{short_description}</p>
                         </div>
                         <div className="max-w-[30%] h-[5rem] md:h-[6rem] mt-2 md:mt-0 flex justify-center select-none items-center ">
-                        <img src={image_url} alt="no image" className="object-fill w-[100%] h-[70%] md:h-[100%]" onError={(e) => {
-                            e.target.style.display = 'none';
-                        }} />
+                        <img src={image_url}  className={`object-cover ${image_url ? `w-[100%]` : `w-0`} h-[70%] md:h-[100%]`} />
                     </div>
                     </div>
                 </a>

@@ -31,8 +31,8 @@ const Admin = () => {
         <>
             <Toaster />
             <NavBar />
-            <div className="w-full mt-8 flex justify-center items-center flex-col gap-10">
-                <h1 className="md:text-left text-center md:max-w-[38rem] w-full md:text-7xl text-6xl font-crimson">Your Blogs</h1>
+            <div className="w-full mt-8 flex justify-center items-center flex-col md:gap-5 gap-10">
+                <h1 className="md:text-left text-center md:max-w-[38rem] w-full md:text-7xl text-6xl font-crimson pb-10 md:pb-5">Your Blogs</h1>
                 {loading && (<>
                     <div className="md:w-[38rem] w-[20rem] h-[5rem] flex justify-center items-center gap-5 mt-20">
                         <div className="w-full h-full flex flex-col gap-5 justify-center">
@@ -67,8 +67,8 @@ const Admin = () => {
 
                 </>
                 )}
-                {!loading && data && (data.map(data =>
-                    <UserBlogs key={data.blogId} id={data.blogId} title={data.title} image_url={data.image_uri} short_description={data.shortDescription} creation_date={convertToDate(data.creationDate)} />
+                {!loading && data && (data.map(data =><div className="md:max-w-[38rem] font-santoshi md:h-[14rem] h-[10rem] border-b-1 w-[80%] group pb-5 flex flex-col justify-center relative">
+                    <UserBlogs key={data.blogId} id={data.blogId} title={data.title} image_url={data.image_uri} short_description={data.shortDescription} creation_date={convertToDate(data.creationDate)} /></div>
                 ))}
 
                 {!loading && (data.length == 0) && (<div><p className="text-[#747474] font-santoshi-medium pt-10">You have created no blogs</p></div>)}
