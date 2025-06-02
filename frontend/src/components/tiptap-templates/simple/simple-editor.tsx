@@ -264,7 +264,6 @@ export function SimpleEditor({ edit_content, title, id }) {
     content: edit_content ? edit_content : content
   })
 
-  console.log(editor)
 
   const handleUpload = async () => {
     const html = editor?.getHTML()

@@ -21,7 +21,6 @@ const useDashboardData = (url: string) => {
         const response = await fetch(url);
         const json = await response.json();
         setResponseData(json.blogs);
-        console.log(json)
       } catch (error: any) {
         setError(error);
       } finally {

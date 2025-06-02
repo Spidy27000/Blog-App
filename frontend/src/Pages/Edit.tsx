@@ -42,15 +42,17 @@ const Edit = () => {
             navigator("/")
             return;
         }
+         if(responseData){
+        setTitle(responseData.blog.title)
+    }
     }, [responseData])
 
+
+   
+
     const content = () => {
-        console.log('asdu')
         if (responseData) {
-            console.log("hello")
-            const jsonContent = generateJSON(responseData?.blog.content, [Document,
-                Paragraph,
-                Text,
+            const jsonContent = generateJSON(responseData?.blog.content, [
                 StarterKit,
                 TextAlign.configure({ types: ["heading", "paragraph"] }),
                 Underline,
@@ -85,7 +87,7 @@ const Edit = () => {
             <div className="w-full flex justify-center items-center h-auto">
                 <div className="p-10 w-[50rem] min-h-[30rem]">
 
-                    <AutosizeTextarea className="bg-none border-0 drop-shadow-none shadow-none outline-0 h-[8rem] focus-visible:ring-0 md:text-6xl text-4xl font-crimson" placeholder="Title" onChange  ={handleTitleChange} maxLength={66} value={responseData?.blog.title} />
+                    <AutosizeTextarea className="bg-none border-0 drop-shadow-none shadow-none outline-0 h-[8rem] focus-visible:ring-0 md:text-6xl text-4xl font-crimson" placeholder="Title" onChange  ={handleTitleChange} maxLength={66} value={title} />
                     {!loading && <SimpleEditor id={id} title={title} edit_content={content()} />}
 
                 </div>

@@ -9,17 +9,12 @@ import { toast, Toaster } from "sonner"
 const Admin = () => {
 
     const user: any = localStorage.getItem('userData')
-    console.log(JSON.parse(user).username)
     const stroredUserId = JSON.parse(user).userId
-
-
-    console.log(stroredUserId)
     const url = `http://localhost:5000/blogs/${stroredUserId}`
-    console.log(url)
+
 
     //Load user created posts
     const { data, loading, error } = useUserPosts(`http://localhost:5000/blogs/${stroredUserId}`)
-    console.log(data)
 
 
     const convertToDate = (timestamp) => {

@@ -74,9 +74,11 @@ const UserBlogs = ({ title, image_url, short_description, author, creation_date,
                             </h2>
                             <p className=" truncate pt-4 text-[#4f4f4f]">{short_description}</p>
                         </div>
-                        <div className="bg-[#eee] w-full h-[5rem] md:h-[7rem] mt-2 md:mt-0 flex justify-center items-center">
-                            img
-                        </div>
+                        <div className="max-w-[30%] h-[5rem] md:h-[6rem] mt-2 md:mt-0 flex justify-center select-none items-center ">
+                        <img src={image_url} alt="no image" className="object-fill w-[100%] h-[70%] md:h-[100%]" onError={(e) => {
+                            e.target.style.display = 'none';
+                        }} />
+                    </div>
                     </div>
                 </a>
             </div>

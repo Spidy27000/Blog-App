@@ -50,19 +50,24 @@ export function LoginForm({
     //validating from the server
     try {
       const response = await fetchUserData();
+      console.log(response.user.username)
       if (response.error) {
         toast.error(response.error)
         return;
       }
       //stroing user details to localstorage
-      localStorage.setItem('userData', JSON.stringify({
-        userId: response.user._id,
-        email: loginData.email,
-        username: response.user.username
-      }))
-      setUserData(loginData)
-      navigator('/')
-      console.log(loginData)
+      if (!loading) {
+        localStorage.setItem('userData', JSON.stringify({
+          userId: response.user._id,
+          email: loginData.email,
+          username: response.user.username
+        }))
+        setUserData(loginData)
+        navigator('/')
+        console.log(loginData)
+      }
+
+
     }
     catch (err) {
       toast.error("Something went wrong" + err)
