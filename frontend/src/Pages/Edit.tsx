@@ -38,8 +38,8 @@ const Edit = () => {
 
     useEffect(() => {
         const storedUserId = JSON.parse(localStorage.getItem('userData')).userId
-        if (responseData || responseData?.user._id != storedUserId) {
-            console.log(responseData?.user._id, storedUserId)
+        if (responseData && responseData?.user._id != storedUserId) {
+            navigator("/")
             return;
         }
     }, [responseData])
