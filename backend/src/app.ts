@@ -181,6 +181,7 @@ app.post(
       blog.shortDescription = generateShortDescription(content);
     }
     if (image_uri) blog.image_uri = image_uri;
+    await blog.save();
 
     res.json({ message: "updated Successfull" })
   }
