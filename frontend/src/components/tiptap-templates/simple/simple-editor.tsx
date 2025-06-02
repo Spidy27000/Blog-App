@@ -201,7 +201,9 @@ const MobileToolbarContent = ({
   </>
 )
 
-export function SimpleEditor({edit_content, title}) {
+export function SimpleEditor({ edit_content, title, id }) {
+
+
   const isMobile = useMobile()
   const windowSize = useWindowSize()
   let navigator = useNavigate();
@@ -211,11 +213,18 @@ export function SimpleEditor({edit_content, title}) {
     content: '',
     image_uri: "none"
   }
+  const updatedBlogData = {
+    blogId: id,
+    title: title,
+    content: '',
+    image_uri: ''
+  }
   const [mobileView, setMobileView] = React.useState<
     "main" | "highlighter" | "link"
   >("main")
   const toolbarRef = React.useRef<HTMLDivElement>(null)
-  const createBlog = useCreateBlog(createBlogData, "http://localhost:5000/blog/create")
+  const createBlog = edit_content ? useCreateBlog(updatedBlogData, "http://localhost:5000/blog/update") : useCreateBlog(createBlogData, "http://localhost:5000/blog/create")
+
   const editor = useEditor({
     immediatelyRender: false,
     editorProps: {
@@ -252,24 +261,27 @@ export function SimpleEditor({edit_content, title}) {
       TrailingNode,
       Link.configure({ openOnClick: false }),
     ],
-    content: edit_content ? edit_content : content,
+    content: edit_content ? edit_content : content
   })
 
-
+  console.log(editor)
 
   const handleUpload = async () => {
     const html = editor?.getHTML()
+    console.log(html)
     createBlogData.content = html
-    try{
+    if (edit_content) {
+      updatedBlogData.content = html
+    }
+    try {
       const response = await createBlog();
       console.log(response)
       navigator("/")
     }
-    catch(err)
-    {
+    catch (err) {
       console.log(err)
     }
-    
+
   }
 
   const bodyRect = useCursorVisibility({
@@ -313,18 +325,18 @@ export function SimpleEditor({edit_content, title}) {
           className="simple-editor-content selection:bg-[#fcffc8] text-2xl" />
       </div>
     </EditorContext.Provider>
-    <AlertDialog>
-  <AlertDialogTrigger className="cursor-pointer active:scale-90 duration-300 ease bg-black p-2 rounded-md text-white font-santoshi-medium pr-4 pl-4 hover:bg-[#272727]">Upload</AlertDialogTrigger>
-  <AlertDialogContent>
-    <AlertDialogHeader>
-      <AlertDialogTitle>Are you absolutely sure you want to upload?</AlertDialogTitle>
+      <AlertDialog>
+        <AlertDialogTrigger className="cursor-pointer active:scale-90 duration-300 ease bg-black p-2 rounded-md text-white font-santoshi-medium pr-4 pl-4 hover:bg-[#272727]">Upload</AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure you want to upload?</AlertDialogTitle>
 
-    </AlertDialogHeader>
-    <AlertDialogFooter>
-      <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
-      <AlertDialogAction className="cursor-pointer"  onClick={handleUpload}>Continue</AlertDialogAction>
-    </AlertDialogFooter>
-  </AlertDialogContent>
-</AlertDialog></>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
+            <AlertDialogAction className="cursor-pointer" onClick={handleUpload}>Continue</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog></>
   )
 }
