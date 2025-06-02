@@ -20,7 +20,7 @@ UserModel.createCollection();
 export type Blog = Document & {
   title: string,
   shortDescription: string,
-  image_uri: string,
+  image_uri?: string,
   content: string,
   creationDate: number,
   updateDate: number,
@@ -30,7 +30,7 @@ export type Blog = Document & {
 const BlogSchema = new Schema<Blog>({
   title: { type: String, required: true },
   shortDescription: { type: String, required: true },
-  image_uri: { type: String, required: true },
+  image_uri: { type: String },
   userId: { type: Schema.Types.ObjectId, required: true , ref: "User" },
   content: { type: String, required: true },
   creationDate: { type: Number, required: true, default: Date.now},

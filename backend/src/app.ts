@@ -97,7 +97,6 @@ app.post(
 // /blog/:blogid (get)
 app.get(
   '/blog/:blogId',
-  // TODO: clean the response of this endpoint 
   async (req: Request<{ blogId: string }>, res: Response): Promise<any> => {
     const { blogId } = req.params;
     const blog = await BlogModel.findById(blogId).lean();
