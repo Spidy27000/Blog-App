@@ -66,7 +66,7 @@ app.get(
   '/login',
   async (req: Request<{}, {}, {}, LoginQuery>, res: Response): Promise<any> => {
     const { email, password } = req.query;
-    const user = await UserModel.findOne({ email: email }).select({ password: 1 }).lean();
+    const user = await UserModel.findOne({ email: email }).lean();
     if (!user || password != user.password) {
       return res.status(401).json({ error: "Invalid email or password" });
     }
@@ -109,7 +109,7 @@ app.get(
   '/blogs/:userId',
   async (req: Request<{ userId: string }>, res: Response): Promise<any> => {
     const { userId } = req.params;
-    const blogs = await BlogModel.find({ userId: userId }).populate("userId", "username").lean();
+    const blogs = await BlogModel.find({ userId: userId }).populate("userId", "username").sort({"creationDate": -1}).lean();
 
     if (!blogs) {
       return res.status(404).json({ error: "Blog Not Found" });
@@ -133,7 +133,7 @@ app.get(
 app.get(
   '/blogs/',
   async (_req: Request, res: Response): Promise<any> => {
-    const blogs = await BlogModel.find().populate("userId", "username");
+    const blogs = await BlogModel.find().sort({"creationDate": -1}).populate("userId", "username").lean();
     if (!blogs) {
       return res.status(404).json({ error: "Blog Not Found" });
     }
