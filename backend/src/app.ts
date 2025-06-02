@@ -14,7 +14,7 @@ app.use(cors({ origin: true, credentials: true }));
 
 app.use(bodyParser.json());
 
-function generateShortDescription(htmlContent: string) {
+function generateShortDescription(htmlContent: string): string {
   const maxLenght = 200;
   let $ = load("<div class='a'><div>")(".a");
   $.append(htmlContent);
@@ -25,6 +25,13 @@ function generateShortDescription(htmlContent: string) {
   text = text.slice(0, maxLenght);
   let lastspace = text.lastIndexOf(" ");
   return text.slice(0, lastspace) + "...";
+
+}
+
+function generateImageUri(htmlContent: string): string | undefined {
+  let $ = load(htmlContent);
+  let image = $("img").first().attr("src");
+  return image;
 
 }
 
@@ -43,7 +50,6 @@ type SignUpBody = {
 type BlogCreateBody = {
   title: string,
   content: string,
-  image_uri?: string,
   userId: string
 }
 type BlogUpdateBody = {
@@ -109,7 +115,7 @@ app.get(
   '/blogs/:userId',
   async (req: Request<{ userId: string }>, res: Response): Promise<any> => {
     const { userId } = req.params;
-    const blogs = await BlogModel.find({ userId: userId }).populate("userId", "username").sort({"creationDate": -1}).lean();
+    const blogs = await BlogModel.find({ userId: userId }).populate("userId", "username").sort({ "creationDate": -1 }).lean();
 
     if (!blogs) {
       return res.status(404).json({ error: "Blog Not Found" });
@@ -133,7 +139,7 @@ app.get(
 app.get(
   '/blogs/',
   async (_req: Request, res: Response): Promise<any> => {
-    const blogs = await BlogModel.find().sort({"creationDate": -1}).populate("userId", "username").lean();
+    const blogs = await BlogModel.find().sort({ "creationDate": -1 }).populate("userId", "username").lean();
     if (!blogs) {
       return res.status(404).json({ error: "Blog Not Found" });
     }
@@ -148,15 +154,16 @@ app.get(
       };
     });
 
-res.json({ blogs: resBlogs });
+    res.json({ blogs: resBlogs });
   }
 );
 
 app.post(
   "/blog/create",
   async (req: Request<{}, {}, BlogCreateBody>, res: Response): Promise<any> => {
-    const { title, content, image_uri, userId } = req.body;
+    const { title, content, userId } = req.body;
     const shortDescription = generateShortDescription(content);
+    const image_uri = generateImageUri(content);
     const blog = new BlogModel({ title, content, image_uri, userId, shortDescription });
     await blog.save();
     res.json({ message: "blog saved" });
@@ -179,6 +186,7 @@ app.post(
     if (content) {
       blog.content = content;
       blog.shortDescription = generateShortDescription(content);
+      blog.image_uri = generateImageUri(content) || ""  ;
     }
     if (image_uri) blog.image_uri = image_uri;
     await blog.save();
