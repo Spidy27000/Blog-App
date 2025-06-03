@@ -36,9 +36,9 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={
-          <ProtectedRoute>
+         
             <Dashboard />
-          </ProtectedRoute>
+         
         } />
         <Route path="/signUp" element={<SignUp setUserData={setUserData} />} />
         <Route path="/admin" element={

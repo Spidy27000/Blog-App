@@ -29,6 +29,7 @@ import { Underline } from "@tiptap/extension-underline"
 import Document from '@tiptap/extension-document';
 import Paragraph from '@tiptap/extension-paragraph';
 import Text from '@tiptap/extension-text';
+import { Color } from '@tiptap/extension-color'
 
 // --- Custom Extensions ---
 import { Link } from "@/components/tiptap-extension/link-extension"
@@ -95,6 +96,8 @@ import content from "@/components/tiptap-templates/simple/data/content.json"
 import { useState } from "react"
 import useCreateBlog from "@/DataHooks/useCreateBlog"
 import CreateBlog from "@/DataHooks/useCreateBlog"
+import TextColorButton, { TextColorPopover } from "@/components/tiptap-ui/textColorChange"
+import TextStyle from "@tiptap/extension-text-style"
 
 const MainToolbarContent = ({
   onHighlighterClick,
@@ -131,6 +134,7 @@ const MainToolbarContent = ({
         <MarkButton type="strike" />
         <MarkButton type="code" />
         <MarkButton type="underline" />
+        <TextColorPopover/>
         {!isMobile ? (
           <ColorHighlightPopover />
         ) : (
@@ -157,16 +161,12 @@ const MainToolbarContent = ({
 
       <ToolbarSeparator />
 
-      <ToolbarGroup>
-        <ImageUploadButton text="Add" />
-      </ToolbarGroup>
-
       <Spacer />
 
       {isMobile && <ToolbarSeparator />}
 
       <ToolbarGroup>
-
+        
       </ToolbarGroup>
     </>
   )
@@ -239,6 +239,7 @@ export function SimpleEditor({ edit_content, title, id }) {
       Document,
       Paragraph,
       Text,
+      TextStyle,
       StarterKit,
       TextAlign.configure({ types: ["heading", "paragraph"] }),
       Underline,
@@ -249,7 +250,9 @@ export function SimpleEditor({ edit_content, title, id }) {
       Typography,
       Superscript,
       Subscript,
-
+      Color.configure({
+  types: ['textStyle'],
+}),
       Selection,
       ImageUploadNode.configure({
         accept: "image/*",

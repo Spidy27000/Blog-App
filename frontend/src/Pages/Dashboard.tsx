@@ -9,18 +9,7 @@ import useDashboardData from "@/DataHooks/useDashboardData";
 import { Toaster, toast } from 'sonner'
 const Dashboard = () => {
 
-  const username: string = JSON.parse(localStorage.getItem('userData')).username
-  if (!username) {
-    toast.error("Something went wrong")
-  }
-
-  let user_name = ''
-
-  if(username){
-    const upperCaseUsernName = username.charAt(0).toUpperCase() + username.slice(1);
-    user_name = upperCaseUsernName
-  }
-
+  
   //loading actual data from the server
   const { responseData, loading, error } = useDashboardData("http://localhost:5000/blogs/")
   console.log(responseData)
@@ -83,55 +72,95 @@ const Dashboard = () => {
     <>
       <Toaster richColors position="top-center" />
       <NavBar />
-
+      <div className="w-[100%]">
+        <div className="flex justify-center items-center">
+ <h1 className="md:text-left text-center mt-8 font-crimson heading select-none md:text-7xl text-6xl -z-20 pb-10 md:pb-5 w-[81%]" ref={headingRef}>Latest Blogs</h1>
+ </div>
+ 
       {/* all users posts */}
-      {username &&
-        <div className="w-full mt-8 flex justify-center items-center flex-col md:gap-5 gap-10">
-          <h1 className="md:text-left text-center md:max-w-[38rem] w-full font-crimson heading select-none md:text-7xl text-6xl -z-20 pb-10 md:pb-5" ref={headingRef}>Hello, {user_name}</h1>
+      {
+        <div className="w-full mt-8  justify-center items-center flex flex-wrap md:gap-5 gap-8">
+         
 
           {/* skeleton card */}
           {loading && (<>
-            <div className="md:w-[38rem] w-[20rem] h-[10rem] flex justify-center items-center gap-5 md:mt-10 mt-5">
-              <div className="w-full h-full flex flex-col gap-5 justify-center">
+            <div className="md:max-w-[25rem] md:h-[31.6rem] h-[31rem] flex justify-center flex-col items-center md:mt-10 mt-5 w-[80%] rounded-md  shadow-md">
+              <div className="w-full h-full flex rounded-t-md">
+                <Skeleton className="md:h-[14rem] w-[100%] rounded-none" />
+              </div>
+              <div className="w-full h-full flex flex-col gap-5 p-5 justify-between">
+                <div className="flex flex-col gap-5">
                 <Skeleton className="h-[20px] w-[100%] rounded-md" />
                 <Skeleton className="h-[20px] w-[80%] rounded-md" />
+                </div>
+                <div>
+                  <Skeleton className="h-[20px] w-[60%] rounded-md" />
+                </div>
               </div>
 
-              <div className="w-[32%] h-[70%] flex justify-center items-center">
-                <Skeleton className="md:h-[100%] h-[60%] w-[100%] rounded-md" />
-              </div>
+              
             </div>
-            <div className="md:w-[38rem] w-[20rem] h-[10rem] flex justify-center items-center gap-5 mt-5">
-              <div className="w-full h-full flex flex-col gap-5 justify-center">
+            <div className="md:max-w-[25rem] md:h-[31.6rem] h-[31rem] flex justify-center flex-col items-center md:mt-10 mt-5 w-[80%] rounded-md  shadow-md">
+              <div className="w-full h-full flex rounded-t-md">
+                <Skeleton className="md:h-[14rem] w-[100%] rounded-none" />
+              </div>
+              <div className="w-full h-full flex flex-col gap-5 p-5 justify-between">
+                <div className="flex flex-col gap-5">
                 <Skeleton className="h-[20px] w-[100%] rounded-md" />
                 <Skeleton className="h-[20px] w-[80%] rounded-md" />
+                </div>
+                <div>
+                  <Skeleton className="h-[20px] w-[60%] rounded-md" />
+                </div>
               </div>
 
-              <div className="w-[32%] h-[70%] flex justify-center items-center">
-                <Skeleton className="md:h-[100%] h-[60%] w-[100%] rounded-md" />
-              </div>
+              
             </div>
-            <div className="md:w-[38rem] w-[20rem] h-[10rem] flex justify-center items-center gap-5 mt-5">
-              <div className="w-full h-full flex flex-col gap-5 justify-center">
+            <div className="md:max-w-[25rem] md:h-[31.6rem] h-[31rem] flex justify-center flex-col items-center md:mt-10 mt-5 w-[80%] rounded-md  shadow-md">
+              <div className="w-full h-full flex rounded-t-md">
+                <Skeleton className="md:h-[14rem] w-[100%] rounded-none" />
+              </div>
+              <div className="w-full h-full flex flex-col gap-5 p-5 justify-between">
+                <div className="flex flex-col gap-5">
                 <Skeleton className="h-[20px] w-[100%] rounded-md" />
                 <Skeleton className="h-[20px] w-[80%] rounded-md" />
+                </div>
+                <div>
+                  <Skeleton className="h-[20px] w-[60%] rounded-md" />
+                </div>
               </div>
 
-              <div className="w-[32%] h-[70%] flex justify-center items-center">
-                <Skeleton className="md:h-[100%] h-[60%] w-[100%] rounded-md" />
-              </div>
+              
             </div>
+            <div className="md:max-w-[25rem] md:h-[31.6rem] h-[31rem] flex justify-center flex-col items-center md:mt-10 mt-5 w-[80%] rounded-md  shadow-md">
+              <div className="w-full h-full flex rounded-t-md">
+                <Skeleton className="md:h-[14rem] w-[100%] rounded-none" />
+              </div>
+              <div className="w-full h-full flex flex-col gap-5 p-5 justify-between">
+                <div className="flex flex-col gap-5">
+                <Skeleton className="h-[20px] w-[100%] rounded-md" />
+                <Skeleton className="h-[20px] w-[80%] rounded-md" />
+                </div>
+                <div>
+                  <Skeleton className="h-[20px] w-[60%] rounded-md" />
+                </div>
+              </div>
+
+              
+            </div>
+
 
           </>
           )}
 
           {/* Contents */}
-          {!loading && (responseData.map(data => <div key={data.blogId} className="md:max-w-[38rem] font-santoshi md:h-[14rem] h-[10rem] border-b-1 w-[80%] group pb-5 flex flex-col justify-center content">
+          {!loading && (responseData.map(data => <div key={data.blogId} className="md:max-w-[25rem] font-santoshi md:h-[31.6rem] h-[31rem] border-1  w-[80%] group  flex flex-wrap justify-center s p- items-center rounded-md hover:shadow-lg transition-all duration-300 ease">
             <Posts title={data.title} id={data.blogId} image_url={data.image_uri} short_description={data.shortDescription} author={data.author} creation_date={convertToDate(data.creationDate)} /> </div>))}
 
 
         </div>
       }
+      </div>
 
     </>
   )

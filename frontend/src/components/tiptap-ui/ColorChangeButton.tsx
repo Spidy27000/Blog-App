@@ -74,7 +74,7 @@ export const HIGHLIGHT_COLORS = [
   },
 ]
 
-export interface ColorHighlightButtonProps extends Omit<ButtonProps, "type"> {
+export interface ColorChangeButtonProps extends Omit<ButtonProps, "type"> {
   /**
    * The TipTap editor instance.
    */
@@ -171,7 +171,7 @@ export function toggleHighlight(
 /**
  * Determines if the highlight button should be disabled
  */
-export function isColorHighlightButtonDisabled(
+export function isColorChangeButtonDisabled(
   editor: Editor | null,
   userDisabled: boolean = false
 ): boolean {
@@ -188,7 +188,7 @@ export function isColorHighlightButtonDisabled(
 /**
  * Determines if the highlight button should be shown
  */
-export function shouldShowColorHighlightButton(
+export function shouldShowColorChangeButton(
   editor: Editor | null,
   hideWhenUnavailable: boolean,
   highlightInSchema: boolean
@@ -217,12 +217,12 @@ export function useHighlightState(
   hideWhenUnavailable: boolean = false
 ) {
   const highlightInSchema = isMarkInSchema("highlight", editor)
-  const isDisabled = isColorHighlightButtonDisabled(editor, disabled)
+  const isDisabled = isColorChangeButtonDisabled(editor, disabled)
   const isActive = isHighlightActive(editor, color)
 
   const shouldShow = React.useMemo(
     () =>
-      shouldShowColorHighlightButton(
+      shouldShowColorChangeButton(
         editor,
         hideWhenUnavailable,
         highlightInSchema
@@ -239,11 +239,11 @@ export function useHighlightState(
 }
 
 /**
- * ColorHighlightButton component for TipTap editor
+ * ColorChangeButton component for TipTap editor
  */
-export const ColorHighlightButton = React.forwardRef<
+export const ColorChangeButton = React.forwardRef<
   HTMLButtonElement,
-  ColorHighlightButtonProps
+  ColorChangeButtonProps
 >(
   (
     {
@@ -327,6 +327,6 @@ export const ColorHighlightButton = React.forwardRef<
   }
 )
 
-ColorHighlightButton.displayName = "ColorHighlightButton"
+ColorChangeButton.displayName = "ColorChangeButton"
 
-export default ColorHighlightButton
+export default ColorChangeButton
