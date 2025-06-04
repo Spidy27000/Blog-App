@@ -16,16 +16,14 @@
 .tiptap-popover {
   --padding: 0.25rem;
   --border-width: 1px;
-
+  margin-top: 0.5rem;
   z-index: 50;
-  border-radius: calc(
-    var(--padding) + var(--tt-radius-lg) + var(--border-width)
-  );
-  border: var(--border-width) solid var(--tt-popover-border-color);
-  background-color: var(--tt-popover-bg-color);
+  border-radius: 6px;
+  border: 1px solid #dcdcdc;
+  background-color: white;
   padding: var(--padding);
   color: var(--tt-popover-text-color);
-  box-shadow: var(--tt-shadow-elevated-md);
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   outline: none;
   overflow: hidden;
   display: flex;

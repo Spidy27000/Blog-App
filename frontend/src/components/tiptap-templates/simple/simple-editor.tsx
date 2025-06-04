@@ -72,7 +72,7 @@ import {
 import { MarkButton } from "@/components/tiptap-ui/mark-button"
 import { TextAlignButton } from "@/components/tiptap-ui/text-align-button"
 import { UndoRedoButton } from "@/components/tiptap-ui/undo-redo-button"
-
+import FontFamily from '@tiptap/extension-font-family'
 // --- Icons ---
 import { ArrowLeftIcon } from "@/components/tiptap-icons/arrow-left-icon"
 import { HighlighterIcon } from "@/components/tiptap-icons/highlighter-icon"
@@ -98,6 +98,36 @@ import useCreateBlog from "@/DataHooks/useCreateBlog"
 import CreateBlog from "@/DataHooks/useCreateBlog"
 import TextColorButton, { TextColorPopover } from "@/components/tiptap-ui/textColorChange"
 import TextStyle from "@tiptap/extension-text-style"
+import TextSizePopover, { FontSizePopover } from "@/components/tiptap-ui/textSizeChange"
+
+import { Extension } from '@tiptap/core'
+import FontFamilysPopover from "@/components/tiptap-ui/textFontFamiliyChange"
+
+const FontSize = Extension.create({
+  name: 'fontSize',
+  
+  addGlobalAttributes() {
+    return [
+      {
+        types: ['textStyle'],
+        attributes: {
+          fontSize: {
+            default: null,
+            parseHTML: element => element.style.fontSize,
+            renderHTML: attributes => {
+              if (!attributes.fontSize) {
+                return {}
+              }
+              return {
+                style: `font-size: ${attributes.fontSize}`,
+              }
+            },
+          },
+        },
+      },
+    ]
+  },
+})
 
 const MainToolbarContent = ({
   onHighlighterClick,
@@ -117,7 +147,6 @@ const MainToolbarContent = ({
         <UndoRedoButton action="redo" />
       </ToolbarGroup>
 
-      <ToolbarSeparator />
 
       <ToolbarGroup>
         <HeadingDropdownMenu levels={[1, 2, 3, 4]} />
@@ -126,8 +155,6 @@ const MainToolbarContent = ({
         <CodeBlockButton />
       </ToolbarGroup>
 
-      <ToolbarSeparator />
-
       <ToolbarGroup>
         <MarkButton type="bold" />
         <MarkButton type="italic" />
@@ -135,6 +162,8 @@ const MainToolbarContent = ({
         <MarkButton type="code" />
         <MarkButton type="underline" />
         <TextColorPopover/>
+        <FontSizePopover/>
+        <FontFamilysPopover/>
         {!isMobile ? (
           <ColorHighlightPopover />
         ) : (
@@ -143,14 +172,12 @@ const MainToolbarContent = ({
         {!isMobile ? <LinkPopover /> : <LinkButton onClick={onLinkClick} />}
       </ToolbarGroup>
 
-      <ToolbarSeparator />
-
       <ToolbarGroup>
         <MarkButton type="superscript" />
         <MarkButton type="subscript" />
       </ToolbarGroup>
 
-      <ToolbarSeparator />
+
 
       <ToolbarGroup>
         <TextAlignButton align="left" />
@@ -166,7 +193,7 @@ const MainToolbarContent = ({
       {isMobile && <ToolbarSeparator />}
 
       <ToolbarGroup>
-        
+        <ImageUploadButton/>
       </ToolbarGroup>
     </>
   )
@@ -239,8 +266,12 @@ export function SimpleEditor({ edit_content, title, id }) {
       Document,
       Paragraph,
       Text,
-      TextStyle,
+      TextStyle.configure({
+        HTMLAttributes: {}
+      }),
       StarterKit,
+      FontSize,
+      FontFamily,
       TextAlign.configure({ types: ["heading", "paragraph"] }),
       Underline,
       TaskList,
@@ -320,11 +351,11 @@ export function SimpleEditor({ edit_content, title, id }) {
         )}
       </Toolbar>
 
-      <div className="content-wrapper w-full font-source-serif  h-full">
+      <div className="content-wrapper w-full font-source-serif ">
         <EditorContent
           editor={editor}
           role="presentation"
-          className="simple-editor-content selection:bg-[#fcffc8] text-2xl" />
+          className="simple-editor-content selection:bg-[#fcffc8] text-2xl min-h-[15rem]" />
       </div>
     </EditorContext.Provider>
       <AlertDialog>

@@ -43,6 +43,7 @@
   color: #2e66bf;
   background-color: #f1f1f1 !important;
   border-radius: 6px;
+  transition: all 0.3s ease;
 }
 
 body {
@@ -81,7 +82,7 @@ body,
 }
 
  .tiptap.ProseMirror > p{
-  font-size: 1.3rem !important;
+  font-size: 1.3rem ;
 }
 
 .tiptap.ProseMirror {
@@ -115,7 +116,12 @@ body,
   scrollbar-color: var(--tt-scrollbar-color) transparent;
 }
 .tiptap-dropdown-menu{
+  margin-top: 0.5rem;
   background-color: white;
+  border-radius: 6px;
+  border: 1px solid #dcdcdc;
+  background-color: white;
+  transition: all 0.3s ease;
 }
 .simple-editor-content {
   max-width: 640px;
@@ -132,6 +138,8 @@ body,
 .tiptap-button:hover{
   background-color: #eee;
   border-radius: 6px;
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .simple-editor-content{

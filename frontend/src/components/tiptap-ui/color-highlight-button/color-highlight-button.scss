@@ -33,6 +33,7 @@
       &::after {
         filter: brightness(80%);
         background-color: #3d88c9;
+        transition: all 0.3s ease;
       }
     }
   }
@@ -43,6 +44,7 @@
         &::after {
           // Andere Eigenschaft für .dark Kontext
           filter: brightness(180%);
+          
         }
       }
     }
