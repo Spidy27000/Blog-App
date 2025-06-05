@@ -8,6 +8,7 @@ import Write from "./Write";
 import { useEffect, useState } from 'react';
 import NotFound from './NotFound';
 import Edit from './Edit';
+import Test from "./Test";
 
 function App() {
 
@@ -51,6 +52,8 @@ function App() {
           </ProtectedRoute>} />
         <Route path='*' element={<NotFound />} />
         <Route path="/login" element={<Login setUserData={setUserData} />} />
+        { /* Tanish:this is my test Route plz dont remove  */}
+        <Route path="/test" element={<Test/>} />
         <Route path="/write" element={
           <ProtectedRoute>
             <Write />
