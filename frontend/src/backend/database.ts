@@ -7,7 +7,7 @@ type Optional<T, K extends keyof T> = Omit<T,K> & Partial<Pick<T,K>>
 
 type UserData = Pick<Tables<'Users'>, "id" | 'email' | 'username'>;
 type BlogCardData = 
-  Optional<Pick<Tables<'Blog'>, "id"| "title" | 'shortDescription' | "image_uri" | "created_at" | "updated_at" > , "image_uri" | "created_at"> & {user : UserData};
+  Optional<Pick<Tables<'Blog'>, "id"| "title" | 'shortDescription'| "tag" | "image_uri" | "created_at" | "updated_at" > , "image_uri" | "created_at"> & {user : UserData};
 
 function generateShortDescription(htmlContent: string): string {
   const maxLenght = 200;
@@ -64,12 +64,12 @@ export class Db {
     return data as UserData;
   }
 
-  public async createBlog(title: string, content: string, image_uri: string, userId: number): Promise<BlogCardData | string> {
+  public async createBlog(title: string, content: string, image_uri: string, userId: number, tag:string): Promise<BlogCardData | string> {
     let shortDescription = generateShortDescription(content);
 
     const { data, error } = await this.connection
       .from("Blog")
-      .insert({ title, content, shortDescription, image_uri, user: userId })
+      .insert({ title, content, shortDescription, image_uri, user: userId, tag })
       .select(`
         id,
         title,
@@ -92,6 +92,29 @@ export class Db {
     } as BlogCardData;
   }
 
+  public async getblog(blogid: number): Promise< ( Omit<Tables<"Blog">, "user"> & { user: UserData } ) | string> {
+    const query = this.connection
+      .from("Blog")
+      .select(`
+        *,
+        user:users!Blog_user_fkey(
+          id,
+          username,
+          email
+        )
+      `)
+      .eq("id", blogid)
+      .single();
+
+    const { data, error } = await query;
+    if (error != null) return error.message;
+
+
+    return {
+      ...data,
+      user: data.user[0]
+    };
+  }
   public async getBlogs(userId: number | null = null): Promise<BlogCardData[] | string> {
     const query = this.connection
       .from("Blog")
@@ -101,6 +124,7 @@ export class Db {
         shortDescription,
         image_uri,
         created_at,
+        tag,
         user:Users!Blog_user_fkey(
           id,
           username,
@@ -119,7 +143,50 @@ export class Db {
       ...blog,
       user: blog.user[0]
     })) as BlogCardData[];
+  }
 
+  public async updateBlog(blogId:number, title:string, content:string, tag: string, image_uri:string): Promise<BlogCardData | string> {
+    const shortDescription = generateShortDescription(content);
+    const query = this.connection
+      .from("Blog")
+      .update({
+        title,
+        shortDescription,
+        content,
+        updated_at : Date.now(),
+        tag,
+        image_uri,
+      })
+      .eq("id", blogId)
+      .select(`
+        id,
+        title,
+        shortDescription,
+        image_uri,
+        created_at,
+        tag,
+        user:Users!Blog_user_fkey(
+          id,
+          username,
+          email
+        )
+      `)
+      .single();
+    const { data, error } = await query;
+    if (error != null) return error.message;
+    return {
+      ... data,
+      user: data.user[0]
+    } as BlogCardData;
+  }
+  public async deleteBlog(blogId:number): Promise<string> {
+    const query = this.connection
+      .from("Blog")
+      .delete()
+      .eq("id", blogId)
+    const { error } = await query;
+    if (error != null) return error.message;
+    return "delete success"
   }
 }
 

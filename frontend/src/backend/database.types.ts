@@ -16,18 +16,20 @@ export type Database = {
           id: number
           image_uri: string | null
           shortDescription: string
+          tag: string
           title: string
           updated_at: string
           user: number
         }
         Insert: {
           content: string
-          created_at: string
+          created_at?: string
           id?: number
           image_uri?: string | null
           shortDescription: string
+          tag?: string
           title: string
-          updated_at: string
+          updated_at?: string
           user: number
         }
         Update: {
@@ -36,6 +38,7 @@ export type Database = {
           id?: number
           image_uri?: string | null
           shortDescription?: string
+          tag?: string
           title?: string
           updated_at?: string
           user?: number
