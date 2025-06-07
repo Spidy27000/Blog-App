@@ -97,7 +97,7 @@ export class Db {
       .from("Blog")
       .select(`
         *,
-        user:users!Blog_user_fkey(
+        user:Users!Blog_user_fkey(
           id,
           username,
           email

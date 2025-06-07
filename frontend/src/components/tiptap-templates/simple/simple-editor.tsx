@@ -238,7 +238,8 @@ export function SimpleEditor({ edit_content, title, id }) {
     title: title,
     userId: JSON.parse(localStorage.getItem('userData')).userId,
     content: '',
-    image_uri: "none"
+    image_uri: "none",
+    tag: ""
   }
   const updatedBlogData = {
     blogId: id,
@@ -250,7 +251,7 @@ export function SimpleEditor({ edit_content, title, id }) {
     "main" | "highlighter" | "link"
   >("main")
   const toolbarRef = React.useRef<HTMLDivElement>(null)
-  const createBlog = edit_content ? useCreateBlog(updatedBlogData, "http://localhost:5000/blog/update") : useCreateBlog(createBlogData, "http://localhost:5000/blog/create")
+  const createBlog = edit_content ? useCreateBlog(updatedBlogData) : useCreateBlog(createBlogData)
 
   const editor = useEditor({
     immediatelyRender: false,

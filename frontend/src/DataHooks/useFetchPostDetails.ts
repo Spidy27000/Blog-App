@@ -1,3 +1,4 @@
+import { Db } from "@/backend/database";
 import { useState, useEffect } from "react";
 
 interface response {
@@ -21,8 +22,8 @@ interface response {
   };
 }
 
-const useFetchPostDetails = (url: string) => {
-  const [responseData, setResponseData] = useState<response>();
+const useFetchPostDetails = (id: number) => {
+  const [responseData, setResponseData] = useState<any>("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -30,9 +31,13 @@ const useFetchPostDetails = (url: string) => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch(url);
-        const json = await response.json();
-        setResponseData(json);
+        let db: Db = Db.inst;
+        const response = await db.getblog(id);
+        if (response) {
+          setLoading(false);
+          setResponseData(response);
+          console.log(response);
+        }
       } catch (error: any) {
         setError(error);
       } finally {

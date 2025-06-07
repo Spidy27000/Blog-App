@@ -6,6 +6,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
 import useSignUp from "@/DataHooks/useSignUp"
 import { toast, Toaster } from "sonner"
+import { Loader } from "lucide-react"
 
 interface signUpData {
   username: string,
@@ -43,7 +44,7 @@ export function SignForm({
     setsignUpData((prev) => ({ ...prev, username: e.target.value }))
   }
 
-  const signUpUser  = useSignUp(signUpData, 'http://localhost:5000/signup/')
+  const { error, loading, fetchUserData } = useSignUp(signUpData.email, signUpData.password, signUpData.username)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -56,21 +57,24 @@ export function SignForm({
     try {
 
       //Signing up the user
-      const response = await signUpUser();
+      const response = await fetchUserData();
 
       //if any err, toast it
-      if (response.error) {
-        toast.error(response.error)
+      if (error) {
+        toast.error(error)
         return;
       }
+      if (response) {
+        localStorage.setItem('userData', JSON.stringify({
+          userId: response.id,
+          email: signUpData.email,
+          username: signUpData.username
+        }))
+        setUserData(signUpData)
+        navigator('/')
+      }
       //stroing user details to localstorage
-      localStorage.setItem('userData', JSON.stringify({
-        userId: response.user._id,
-        email: signUpData.email,
-        username: signUpData.username
-      }))
-      setUserData(signUpData)
-      navigator('/')
+
     }
     catch (err) {
       toast.error("Something went wrong" + err)
@@ -125,7 +129,7 @@ export function SignForm({
                 onChange={handlePasswordChange} />
             </div>
             <Button type="submit" className="w-full text-md cursor-pointer" onClick={handleSubmit}>
-              Sign Up
+              {loading ? <Loader className=" animate-spin"/> : "Sign Up"}
             </Button>
           </div>
 

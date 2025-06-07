@@ -11,7 +11,8 @@ const Post = () => {
     let { id } = useParams()
 
     //fetching the details blog with param id
-    const { responseData, loading, error } = useFetchPostDetails(`http://localhost:5000/blog/${id}`)
+    
+    const { responseData, loading, error } = useFetchPostDetails(+id)
 
     useEffect(() => {
         if (error) {
@@ -40,7 +41,7 @@ const Post = () => {
             let h5 = h4?.replace(/<h5(\s[^>]*)?>/gi, '<h5 class=" text-lg font-crimson font-bold pb-5"><br>')
             let h6 = h5?.replace(/<h5(\s[^>]*)?>/gi, '<h6 class=" text-md font-crimson font-bold pb-5"><br>')
             let sup = h6?.replace(/<sup(\s[^>]*)?>/gi, '<sup class=" text-[#b5b5b5]">')
-            let p = sup?.replace(/<p(\s[^>]*)?>/gi, '<p class=" pb-10 text-[1.2rem] leading-8">')
+            let p = sup?.replace(/<p(\s[^>]*)?>/gi, '<p class=" pb-10 leading-8">')
             return p?.replace(/<img(\s[^>]*)?>/gi, '<img$1 class=" mb-10">')
         }
     }
@@ -48,7 +49,7 @@ const Post = () => {
         <>
             <div>
                 <Toaster />
-                <NavBar />
+                <NavBar isLoged={true}/>
                 {loading && (<div className="w-full flex justify-center items-center">
                     <div className="p-10 w-[50rem] min-h-[30rem] flex flex-col gap-10">
                         <Skeleton className="h-[120px] w-[100%]" />
@@ -64,14 +65,14 @@ const Post = () => {
                         </div>
                     </div>
                 </div>)}
-                {!loading && (<div className="w-full flex justify-center items-center">
+                {!loading && responseData && (<div className="w-full flex justify-center items-center">
                     <div className="p-10 w-[50rem] min-h-[30rem]">
 
-                        <h1 className="font-crimson md:text-6xl text-4xl">{responseData?.blog.title}</h1>
+                        <h1 className="font-crimson md:text-6xl text-4xl">{responseData?.title}</h1>
 
-                        <p className=" pb-5 mb-10 pt-10 border-b-1 text-[#5f5f5f] flex  items-center">{responseData?.user.username}  <span className="h-full pr-2 pl-2 text-[#a7a4a4] text-[0.8rem] text-center">●</span>  {formatTimestamp(responseData?.blog.creationDate)}</p>
+                        <p className=" pb-5 mb-10 pt-10 border-b-1 text-[#5f5f5f] flex  items-center">  <span className="h-full pr-2 pl-2 text-[#a7a4a4] text-[0.8rem] text-center">●</span>  {formatTimestamp(responseData?.creationDate)}</p>
 
-                        <div className="md:text-[1.3rem] text-[1.2rem] font-source-serif min-h-[20rem] textContent" dangerouslySetInnerHTML={{ __html: headinngAttr(responseData?.blog.content) }}></div>
+                        <div className="md:text-[1.3rem] text-[1.2rem] font-source-serif min-h-[20rem] textContent" dangerouslySetInnerHTML={{ __html: headinngAttr(responseData?.content) }}></div>
                     </div>
                 </div>)}
 

@@ -1,15 +1,19 @@
-const useCreateBlog = (blogData, url) =>{
+import { Db } from "@/backend/database";
+
+interface blogData {
+  title:string,
+  content:string,
+  image_uri:string,
+  userId: number,
+  tag: string
+}
+
+const useCreateBlog = (blogData) =>{
     const createBlog = async () => {
     try {
-      const response = await fetch(url, {
-        method: "POST",
-        body: JSON.stringify(blogData),
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-        },
-      });
-      const json = await response.json();
-      return JSON.parse(json.message);
+       let db: Db = Db.inst;
+       const response = await db.createBlog(blogData.title, blogData.content, blogData.image_uri, blogData.userId, blogData.tag)
+       return response
     } catch (err: any) {
       return err;
     }

@@ -5,6 +5,8 @@ import { Label } from "@/components/ui/label"
 import { useState } from "react"
 import { useNavigate } from "react-router"
 import useLogin from "../DataHooks/useLogin"
+import { Loader } from 'lucide-react';
+
 import { toast, Toaster } from "sonner"
 
 
@@ -38,7 +40,7 @@ export function LoginForm({
     setLoginData((prev) => ({ ...prev, password: e.target.value }))
   }
 
-  const { loading, fetchUserData } = useLogin(`http://localhost:5000/login/?email=${loginData.email}&password=${loginData.password}`);
+  const {error,  loading, fetchUserData } = useLogin(loginData.email, loginData.password);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -49,17 +51,19 @@ export function LoginForm({
     //validating from the server
     try {
       const response = await fetchUserData();
-      if (response.error) {
-        toast.error(response.error)
+      if (error) {
+        toast.error(error)
         return;
       }
       //stroing user details to localstorage
-      if (!loading) {
+      if (response) {
+        console.log(loading)
         localStorage.setItem('userData', JSON.stringify({
-          userId: response.user._id,
-          email: loginData.email,
-          username: response.user.username
+          userId: response.id,
+          email: response.email,
+          username: response.username
         }))
+        console.log(response)
         setUserData(loginData)
         navigator('/')
         console.log(loginData)
@@ -113,7 +117,7 @@ export function LoginForm({
                 onChange={handlePasswordChange} />
             </div>
             <Button type="submit" className="w-full text-md cursor-pointer" onClick={handleSubmit}>
-              Login
+              {loading ? <Loader className=" animate-spin"/> : "Login"}
             </Button>
           </div>
 

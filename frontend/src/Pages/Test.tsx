@@ -8,7 +8,7 @@ const useLogin = (email:string,password:string) => {
       // let res = await db.login(email, password); 
       let res = await db.getBlogs();
       return res;
-  };
+  };  
   return { fetchUserData };
 };
 

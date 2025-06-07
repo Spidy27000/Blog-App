@@ -1,15 +1,20 @@
+import  { Db } from "@/backend/database";
 import { useState, useEffect } from "react";
-
-interface response{
-  blogId: string,
-  title: string,
-  author: string,
-  shortDescription: string,
-  image_uri: string,
-  creationDate: number
+interface response {
+  id: number;
+  title: string;
+  shortDescription: string;
+  image_uri: string;
+  created_at: string;
+  tag: any;
+  user: {
+    id: any;
+    username: string;
+    email: string;
+  };
 }
 
-const useDashboardData = (url: string) => {
+const useDashboardData = () => {
   const [responseData, setResponseData] = useState<response[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -17,15 +22,14 @@ const useDashboardData = (url: string) => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      try {
-        const response = await fetch(url);
-        const json = await response.json();
-        setResponseData(json.blogs);
-      } catch (error: any) {
-        setError(error);
-      } finally {
-        setLoading(false);
+      let db: Db = Db.inst;
+      let res = await db.getBlogs()
+      if (res)
+      {
+        setResponseData(res)
+        setLoading(false)
       }
+      
     };
 
     fetchData();
