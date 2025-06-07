@@ -3,11 +3,11 @@ import type { Database, Tables } from "./database.types";
 import { load } from "cheerio"
 
 // makes a type to make specfic keys optinal 
-type Optional<T, K extends keyof T> = Omit<T,K> & Partial<Pick<T,K>>
+type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 
 type UserData = Pick<Tables<'Users'>, "id" | 'email' | 'username'>;
-type BlogCardData = 
-  Optional<Pick<Tables<'Blog'>, "id"| "title" | 'shortDescription'| "tag" | "image_uri" | "created_at" | "updated_at" > , "image_uri" | "created_at"> & {user : UserData};
+type BlogCardData =
+  Optional<Pick<Tables<'Blog'>, "id" | "title" | 'shortDescription' | "tag" | "image_uri" | "created_at" | "updated_at">, "image_uri" | "created_at"> & { user: UserData };
 
 function generateShortDescription(htmlContent: string): string {
   const maxLenght = 200;
@@ -64,7 +64,7 @@ export class Db {
     return data as UserData;
   }
 
-  public async createBlog(title: string, content: string, image_uri: string, userId: number, tag:string): Promise<BlogCardData | string> {
+  public async createBlog(title: string, content: string, image_uri: string, userId: number, tag: string): Promise<BlogCardData | string> {
     let shortDescription = generateShortDescription(content);
 
     const { data, error } = await this.connection
@@ -92,7 +92,7 @@ export class Db {
     } as BlogCardData;
   }
 
-  public async getblog(blogid: number): Promise< ( Omit<Tables<"Blog">, "user"> & { user: UserData } ) | string> {
+  public async getblog(blogid: number): Promise<(Omit<Tables<"Blog">, "user"> & { user: UserData }) | string> {
     const query = this.connection
       .from("Blog")
       .select(`
@@ -130,7 +130,8 @@ export class Db {
           username,
           email
         )
-      `);
+      `)
+      .order("created_at", { ascending: true })
 
     if (userId !== null) {
       query.eq("user.id", userId);
@@ -145,7 +146,7 @@ export class Db {
     })) as BlogCardData[];
   }
 
-  public async updateBlog(blogId:number, title:string, content:string, tag: string, image_uri:string): Promise<BlogCardData | string> {
+  public async updateBlog(blogId: number, title: string, content: string, tag: string, image_uri: string): Promise<BlogCardData | string> {
     const shortDescription = generateShortDescription(content);
     const query = this.connection
       .from("Blog")
@@ -153,7 +154,7 @@ export class Db {
         title,
         shortDescription,
         content,
-        updated_at : Date.now(),
+        updated_at: Date.now(),
         tag,
         image_uri,
       })
@@ -175,11 +176,11 @@ export class Db {
     const { data, error } = await query;
     if (error != null) return error.message;
     return {
-      ... data,
+      ...data,
       user: data.user[0]
     } as BlogCardData;
   }
-  public async deleteBlog(blogId:number): Promise<string> {
+  public async deleteBlog(blogId: number): Promise<string> {
     const query = this.connection
       .from("Blog")
       .delete()
@@ -188,5 +189,77 @@ export class Db {
     if (error != null) return error.message;
     return "delete success"
   }
+
+  public async getTags(): Promise<({ tags: string[] }) | string> {
+    const query = this.connection
+      .from("Blog")
+      .select("tag");
+    const { data, error } = await query;
+    if (error != null) return error.message;
+
+    return {
+      tags: data.map(tag => (tag.tag))
+    }
+  }
+
+  //TODO: we can use the existing data of the page to filter the blogs 
+  public async serachByTag(tag: string): Promise<BlogCardData[] | string> {
+    const query = this.connection
+      .from("Blog")
+      .select(`
+        id,
+        title,
+        shortDescription,
+        image_uri,
+        created_at,
+        tag,
+        user:Users!Blog_user_fkey(
+          id,
+          username,
+          email
+        )
+      `)
+      .order("created_at", { ascending: true })
+      .eq("tag", tag);
+
+    const { data, error } = await query;
+    if (error != null) return error.message;
+
+    return data.map(blog => ({
+      ...blog,
+      user: blog.user[0]
+    })) as BlogCardData[];
+  }
+  public async serachByDescription(search: string): Promise<BlogCardData[] | string> {
+    const query = this.connection
+      .from("Blog")
+      .select(`
+        id,
+        title,
+        shortDescription,
+        image_uri,
+        created_at,
+        tag,
+        user:Users!Blog_user_fkey(
+          id,
+          username,
+          email
+        )
+      `).textSearch("title", search, {
+        type: "websearch",
+        config: "english"
+      })
+      .order("created_at", { ascending: true })
+
+    const { data, error } = await query;
+    if (error != null) return error.message;
+
+    return data.map(blog => ({
+      ...blog,
+      user: blog.user[0]
+    })) as BlogCardData[];
+  }
+
+
 }
 
